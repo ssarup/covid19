@@ -12,26 +12,47 @@ class TestLocation2(TestCase):
         self.assertEqual('abc', loc.country)
         self.assertNotEqual('abcd', loc.country)
 
-    # def test_state(self):
-    #     self.fail()
-    #
-    # def test_country(self):
-    #     self.fail()
-    #
-    # def test_state(self):
-    #     self.fail()
-    #
-    # def test_county(self):
-    #     self.fail()
-    #
-    # def test_county(self):
-    #     self.fail()
-    #
-    # def test_city(self):
-    #     self.fail()
-    #
-    # def test_city(self):
-    #     self.fail()
+    def test_state(self):
+        loc = Location2()
+        self.assertIsNone(loc._state)
+        loc = Location2(None, 'NY')
+        self.assertEqual('NY', loc._state)
+        self.assertNotEqual('NJ', loc._state)
+        loc._state = 'CA'
+        self.assertEqual('CA', loc._state)
+        loc._country = 'US'
+        self.assertEqual('CA', loc._state)
+        l1 = Location2('US', 'CA')
+        self.assertEqual(loc, l1)
+
+    def test_county(self):
+        loc = Location2()
+        self.assertIsNone(loc._county)
+        loc = Location2(None, None, 'Rockland')
+        self.assertEqual('Rockland', loc._county)
+        self.assertNotEqual('Middlesex', loc._county)
+        loc._county = 'Hudson'
+        self.assertEqual('Hudson', loc._county)
+        loc._country = 'US'
+        loc._state = 'NY'
+        self.assertEqual('Hudson', loc._county)
+        l1 = Location2('US', 'NY', 'Hudson')
+        self.assertEqual(loc, l1)
+
+    def test_state(self):
+        loc = Location2()
+        self.assertIsNone(loc._city)
+        loc = Location2(None, None, None, 'New City')
+        self.assertEqual('New City', loc._city)
+        self.assertNotEqual('Nanuet', loc._city)
+        loc._city = 'Ramapo'
+        self.assertEqual('Ramapo', loc._city)
+        loc._country = 'US'
+        loc._state = 'NY'
+        loc._county = 'Rockland'
+        self.assertEqual('Ramapo', loc._city)
+        l1 = Location2('US', 'NY', 'Rockland', 'Ramapo')
+        self.assertEqual(loc, l1)
 
     def test_equal(self):
         def test1():
