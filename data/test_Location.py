@@ -11,6 +11,9 @@ class TestLocation(TestCase):
         self.assertIsNotNone(loc)
         self.assertEqual('abc', loc.country)
         self.assertNotEqual('abcd', loc.country)
+        loc.country = 'xyz'
+        self.assertEqual('abc', loc.country)
+        self.assertNotEqual('xyz', loc.country)
 
     def test_state(self):
         loc = Location()
@@ -24,6 +27,12 @@ class TestLocation(TestCase):
         self.assertEqual('CA', loc._state)
         l1 = Location('US', 'CA')
         self.assertEqual(loc, l1)
+        l1 = Location('US', 'New Jersey')
+        self.assertEqual('New Jersey', l1.state)
+        self.assertEqual(Location('US', 'New Jersey'), l1)
+        l1.state = 'NJ'
+        self.assertNotEqual('NJ', l1.state)
+        self.assertEqual('New Jersey', l1.state)
 
     def test_county(self):
         loc = Location()
@@ -38,8 +47,11 @@ class TestLocation(TestCase):
         self.assertEqual('Hudson', loc._county)
         l1 = Location('US', 'NY', 'Hudson')
         self.assertEqual(loc, l1)
+        l1.county = 'Orange'
+        self.assertNotEqual('Orange', l1.county)
+        self.assertEqual('Hudson', l1.county)
 
-    def test_state(self):
+    def test_city(self):
         loc = Location()
         self.assertIsNone(loc._city)
         loc = Location(None, None, None, 'New City')
@@ -53,6 +65,9 @@ class TestLocation(TestCase):
         self.assertEqual('Ramapo', loc._city)
         l1 = Location('US', 'NY', 'Rockland', 'Ramapo')
         self.assertEqual(loc, l1)
+        l1.city = 'Monroe'
+        self.assertNotEqual('Monroe', l1.city)
+        self.assertEqual('Ramapo', l1.city)
 
     def test_equal(self):
         def test1():
