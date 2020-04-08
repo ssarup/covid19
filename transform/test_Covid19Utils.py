@@ -3,13 +3,13 @@ from datetime import datetime
 from transform.Covid19CSVTransformer import Covid19CSV
 from transform.Covid19Utils import Covid19Utils
 from data.ObsCollection import ObsCollection
-from data.Location import Location
+from data.Location2 import Location2
 
 
 class TestCovid19Utils(TestCase):
     def test_add_csvto_obs_collection(self):
         def createLoc(s1_, s2_, s3_):
-            return Location().country(s1_).state(s2_).county(s3_)
+            return Location2(country_=s1_, state_=s2_, county_=s3_)
 
         def test1():
             cObj = Covid19CSV('aa', 'bb', 'cc')
@@ -66,28 +66,34 @@ class TestCovid19Utils(TestCase):
                     i = i + 1
 
             def verifyObs(obsColl_):
+                def compareLists(dateTup_, valueTup_, obsL_):
+                    j = 0
+                    self.assertEqual(len(dateTup_), len(valueTup_))
+                    for dtStr in dateTup_:
+                        # print(dtStr, valueTup_[j])
+                        dt = datetime.strptime(dtStr, '%m/%d/%Y')
+                        value = valueTup_[j]
+                        obs = obsL_[j]
+                        # print(str(obs))
+                        self.assertEqual(dt, obs._obsDate._value)
+                        self.assertEqual(value, obs._value)
+                        j = j + 1
+
                 i = 0
                 for locTup in locList:
-                    loc = Location().country(locTup[0]).state(locTup[1]).county(locTup[2])
+                    loc = Location2(country_=locTup[0], state_=locTup[1], county_=locTup[2])
                     obsList = obsColl_.getObservations(loc)
-                    print(len(obsList))
-                    # self.assertEqual(len(valueList[i]), len(obsList))
+                    self.assertEqual(len(valueList[i]), len(obsList))
+                    compareLists(dateList[i], valueList[i], obsList)
                     i = i + 1
 
             obsColl = ObsCollection()
             setup(obsColl)
             self.assertEqual(len(locList), len(obsColl.locations()))
             self.assertEqual(8, obsColl.numObservations())
+            # print(str(obsColl))
             verifyObs(obsColl)
 
         test1()
         test2()
         test3()
-        # c1 = Covid19CSV('aa', 'bb', 'cc')
-        # dateList = ['1/1/2020', '1/2/2020', '1/3/2020']
-        # valueAsTuple = (10, 20, 30)
-        # c1.setDate2Value(dateList, valueAsTuple)
-        #
-        # coll = ObsCollection()
-        # Covid19Utils.addCSVToObsCollection(c1, coll)
-        # self.assertEqual(3, coll.numObservations())
