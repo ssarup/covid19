@@ -1,5 +1,4 @@
 from covid19io.FileReader import FileReader
-from data.Location import Location
 from data.ObsCollection import ObsCollection
 from covid19io.Covid19Args import Covid19Args
 from transform.CmdLineToLocation import CmdLineToLocation
