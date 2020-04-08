@@ -3,13 +3,13 @@ from datetime import datetime
 from transform.Covid19CSVTransformer import Covid19CSV
 from transform.Covid19Utils import Covid19Utils
 from data.ObsCollection import ObsCollection
-from data.Location2 import Location2
+from data.Location import Location
 
 
 class TestCovid19Utils(TestCase):
     def test_add_csvto_obs_collection(self):
         def createLoc(s1_, s2_, s3_):
-            return Location2(country_=s1_, state_=s2_, county_=s3_)
+            return Location(country_=s1_, state_=s2_, county_=s3_)
 
         def test1():
             cObj = Covid19CSV('aa', 'bb', 'cc')
@@ -81,7 +81,7 @@ class TestCovid19Utils(TestCase):
 
                 i = 0
                 for locTup in locList:
-                    loc = Location2(country_=locTup[0], state_=locTup[1], county_=locTup[2])
+                    loc = Location(country_=locTup[0], state_=locTup[1], county_=locTup[2])
                     obsList = obsColl_.getObservations(loc)
                     self.assertEqual(len(valueList[i]), len(obsList))
                     compareLists(dateList[i], valueList[i], obsList)

@@ -1,6 +1,6 @@
 from unittest import TestCase
 from datetime import datetime, timedelta
-from data.Location2 import Location2
+from data.Location import Location
 from data.ObservationDate import ObservationDate
 from data.ObsCollection import ObsCollection
 from data.Observation import Observation
@@ -26,7 +26,7 @@ class TestObsCollection(TestCase):
 
         dt = datetime.strptime('1/1/2020', '%m/%d/%Y')
         for i in range(0, self._NUM_LOC):
-            loc = Location2(str(i))
+            loc = Location(str(i))
             self._checkLoc.append(loc)
 
             for j in range(0, self._NUM_OBS):
@@ -47,7 +47,7 @@ class TestObsCollection(TestCase):
         self.assertEqual(coll.numObservations(), 0)
 
         obsDate = lambda dt : ObservationDate.fromMDY(dt.strftime('%m/%d/%Y'))
-        coll.addObservation(Location2(city_="New City"), obsDate(datetime.now()), 1)
+        coll.addObservation(Location(city_="New City"), obsDate(datetime.now()), 1)
         self.assertEqual(coll.numObservations(), 1)
 
 
@@ -87,7 +87,7 @@ class TestObsCollection(TestCase):
         self.assertEqual(coll.numObservations(), self._numInputs)
 
         def verifyObservation(loc_, obs_):
-            assert isinstance(loc_, Location2)
+            assert isinstance(loc_, Location)
             assert isinstance(obs_, Observation)
             key = TestObsCollection._makeKey(loc_, obs_._value)
             self.assertEqual(obs_._obsDate._value, self._checkDate[key])
