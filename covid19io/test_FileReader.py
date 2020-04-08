@@ -57,11 +57,11 @@ class TestFileReader(TestCase):
             self.assertEqual(0, len(tx._coll))
 
         def test4():
-            rdr = FileReader('/Users/developer/Downloads/time_series_covid19_confirmed_US.csv')
+            rdr = FileReader('/Users/developer/Downloads/time_series_covid19_confirmed_US-2.csv')
             tx = TestFileReader.MyTransformer1()
             self.assertEqual(0, len(tx._coll))
             rdr.read(tx)
-            self.assertEqual('/Users/developer/Downloads/time_series_covid19_confirmed_US.csv', rdr._fName)
+            self.assertEqual('/Users/developer/Downloads/time_series_covid19_confirmed_US-2.csv', rdr._fName)
             self.assertIsNone(rdr._fHandle)
             self.assertEqual(3253, len(tx._coll))
 

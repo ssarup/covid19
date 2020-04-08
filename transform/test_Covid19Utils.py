@@ -35,6 +35,22 @@ class TestCovid19Utils(TestCase):
             self.assertEqual(10, obsList[0]._value)
 
         def test3():
+            cObj = Covid19CSV('aa', 'bb', 'cc')
+            cObj.setDate2Value(['1/1/20'], (10,))
+            oColl = ObsCollection()
+            Covid19Utils.addCSVToObsCollection(cObj, oColl)
+            self.assertEqual(1, oColl.numObservations())
+            self.assertEqual(1, len(oColl.locations()))
+            locations = list(oColl.locations())
+            self.assertEqual('aa', locations[0]._country)
+            self.assertEqual('bb', locations[0]._state)
+            self.assertEqual('cc', locations[0]._county)
+            obsList = oColl.getObservations(locations[0])
+            self.assertEqual(1, len(obsList))
+            self.assertEqual(datetime.strptime('1/1/2020', '%m/%d/%Y'), obsList[0]._obsDate._value)
+            self.assertEqual(10, obsList[0]._value)
+
+        def test4():
             locList = [
                 ('aa', 'bb', 'cc'),
                 ('aa', 'bb', 'dd'),
@@ -97,3 +113,4 @@ class TestCovid19Utils(TestCase):
         test1()
         test2()
         test3()
+        test4()

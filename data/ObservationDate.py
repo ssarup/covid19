@@ -12,6 +12,18 @@ class ObservationDate(object):
         except:
             return None
 
+    @classmethod
+    def fromMDY2(cls, mdy_):
+        """
+        Verifies input mdy_ string.
+        This function assumes its a 2-digit year.
+        """
+        try:
+            assert isinstance(mdy_, str)
+            return ObservationDate(datetime.datetime.strptime(mdy_, '%m/%d/%y'))
+        except:
+            return None
+
     def __init__(self, value_):
         assert isinstance(value_, datetime.datetime)
         self._value = value_

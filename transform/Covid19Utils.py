@@ -18,8 +18,13 @@ class Covid19Utils(object):
         assert isinstance(obsColl_, ObsCollection)
 
         loc = Location(csvObj_.country, csvObj_.state, csvObj_.county)
-        for dt in csvObj_.dateList:
-            obsDate = ObservationDate.fromMDY(dt)
-            obsColl_.addObservation(loc, obsDate, csvObj_.date2Value[dt])
+        for dtStr in csvObj_.dateList:
+            obsDate = ObservationDate.fromMDY(dtStr)
+            if obsDate is None:
+                # Try using the 2-digit year format, since the file can have either.
+                obsDate = ObservationDate.fromMDY2(dtStr)
+            # print(dtStr)
+            assert isinstance(obsDate, ObservationDate)
+            obsColl_.addObservation(loc, obsDate, csvObj_.date2Value[dtStr])
 
 
