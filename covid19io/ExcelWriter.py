@@ -6,25 +6,10 @@ class ExcelWriter(OutputWriter):
     def __init__(self, filename_):
         self._filename = filename_
         self._workbook = openpyxl.Workbook()
-        self._activeSheetName = None
-        self._worksheet = None
-        self._rowNum = None
-        self._column = None
-
-    # def writeColumns(self, tuple_, worksheet_, lineNum_, colNum_):
-    #     assert isinstance(worksheet_, worksheet)
-    #     i = 0
-    #     for item in tuple_:
-    #         currCell = worksheet_.cell(row=lineNum_, column=colNum_+i)
-    #         currCell.value = str(item)
-    #         i = i + 1
-    #
-    # def writeLine(self, list_, worksheet_, lineNum_):
-    #     assert isinstance(worksheet_, worksheet)
-    #     i = 0
-    #     for item in list_:
-    #         self.writeColumns(item, worksheet_, i, 1)
-    #         i = i + 1
+        self._worksheet = self._workbook.active
+        self._activeSheetName = self._worksheet.title
+        self._rowNum = 1
+        self._column = 1
 
     @property
     def filename(self):

@@ -9,14 +9,14 @@ class TestExcelWriter(TestCase):
         exFile = ExcelWriter('/Users/developer/Downloads/test.xlsx')
         self.assertEqual('/Users/developer/Downloads/test.xlsx', exFile.filename)
         self.assertIsNotNone(exFile._workbook)
-        self.assertIsNone(exFile._worksheet)
-        self.assertIsNone(exFile._activeSheetName)
-        self.assertIsNone(exFile._rowNum)
-        self.assertIsNone(exFile._column)
+        self.assertIsNotNone(exFile._worksheet)
+        self.assertEqual('Sheet', exFile._activeSheetName)
+        self.assertEqual(1, exFile._rowNum)
+        self.assertEqual(1, exFile._column)
 
     def test_activeSheetName(self):
         exFile = ExcelWriter('/Users/developer/Downloads/test.xlsx')
-        self.assertIsNone(exFile.activeSheetName)
+        self.assertEqual('Sheet', exFile.activeSheetName)
 
     def test_set_active_sheet(self):
         exFile = ExcelWriter('/Users/developer/Downloads/test.xlsx')

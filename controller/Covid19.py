@@ -25,7 +25,6 @@ if __name__ == '__main__':
     #     print(str(loc))
 
     writer = ExcelWriter(args.outputfile)
-    writer.setActiveSheet('RawData')
     writer.writeLine(ObsCollection.headerForOutput(), header_=True)
 
     for locStr in args.locationList:
