@@ -25,7 +25,7 @@ if __name__ == '__main__':
     #     print(str(loc))
 
     # TODO Change input template file name to an argument.
-    writer = ExcelWriter('/Users/developer/Downloads/covid19Template5.xlsx', openExisting=True)
+    writer = ExcelWriter('/Users/developer/Downloads/covid19Template3.xlsm', openExisting=True)
     # TODO Handle this better.
     # writer.writeLine(ObsCollection.headerForOutput(), header_=True)
     writer._rowNum = 2

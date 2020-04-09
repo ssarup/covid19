@@ -7,7 +7,8 @@ class ExcelWriter(OutputWriter):
     def __init__(self, filename_, openExisting=False):
         self._filename = filename_
         if openExisting:
-            self._workbook = openpyxl.load_workbook(filename=self._filename)
+            self._workbook = openpyxl.load_workbook(filename=self._filename, keep_vba=True)
+            # TODO figure out a better way to manage keep_vba.
         else:
             self._workbook = openpyxl.Workbook()
         self._worksheet = self._workbook.active
@@ -53,6 +54,7 @@ class ExcelWriter(OutputWriter):
     def save(self, filename=None):
         if filename is None:
             self._workbook.save(filename=self._filename)
+            # TODO figure out a better way to manage keep_vba.
         else:
             self._workbook.save(filename=filename)
 
