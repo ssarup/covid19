@@ -1,3 +1,4 @@
+from shutil import copyfile
 from unittest import TestCase
 from covid19io.ExcelWriter import ExcelWriter
 
@@ -53,6 +54,14 @@ class TestExcelWriter(TestCase):
             ('cde', '01/04/2020', 30),
             ('def', '01/05/2020', 40),
             ('efg', '01/06/2020', 50),
+        ]
+        self._verifyListNew = [
+            ('abc', '01/02/2020', 10),
+            ('bcd', '01/03/2020', 20),
+            ('cde', '01/04/2020', 30),
+            ('def', '01/05/2020', 40),
+            ('efg', '01/06/2020', 50),
+            ('xyz', '01/06/2050', 500),
         ]
 
     def test_write_line(self):
@@ -137,6 +146,65 @@ class TestExcelWriter(TestCase):
 
         test1()
         test2()
+        self.assertTrue('abc' in exFile._workbook.sheetnames)
+        self.assertTrue('def' in exFile._workbook.sheetnames)
+        exFile.save()
+
+    def test_openExisting(self):
+        copyfile('/Users/developer/Downloads/test.xlsx',
+                 '/Users/developer/Downloads/test2.xlsx')
+        exFile = ExcelWriter('/Users/developer/Downloads/test2.xlsx', openExisting=True)
+
+        def test1():
+            self.assertEqual('/Users/developer/Downloads/test2.xlsx', exFile.filename)
+            self.assertIsNotNone(exFile._workbook)
+            self.assertIsNotNone(exFile._worksheet)
+            self.assertEqual('Sheet', exFile._activeSheetName)
+            self.assertEqual(1, exFile._rowNum)
+            self.assertEqual(1, exFile._column)
+
+        def test2():
+            # Remove existing sheet 'abc' before proceeding.
+            self.assertTrue('abc' in exFile._workbook.sheetnames)
+            exFile._workbook.remove(exFile._workbook['abc'])
+            self.assertFalse('abc' in exFile._workbook.sheetnames)
+            exFile.setActiveSheet('abc')
+            header = True
+            for item in self._verifyListNew:
+                exFile.writeLine(item, header)
+                if header:
+                    header = False
+                else:
+                    header = True
+
+            self.assertEqual(len(self._verifyListNew), exFile._worksheet.max_row)
+            self.assertEqual(len(self._verifyListNew) + 1, exFile._rowNum)
+            self.assertEqual(1, exFile._column)
+            self.assertEqual(3, exFile._worksheet.max_column)
+
+        def test3():
+            # Remove existing sheet 'def' before proceeding.
+            self.assertTrue('def' in exFile._workbook.sheetnames)
+            exFile._workbook.remove(exFile._workbook['def'])
+            self.assertFalse('def' in exFile._workbook.sheetnames)
+            exFile.setActiveSheet('def')
+            header = True
+            for item in self._verifyListNew[:-1]:
+                exFile.writeLine(item, header)
+                if header:
+                    header = False
+                else:
+                    header = True
+
+            self.assertEqual(len(self._verifyListNew) - 1, exFile._worksheet.max_row)
+            self.assertEqual(len(self._verifyListNew), exFile._rowNum)
+            self.assertEqual(1, exFile._column)
+            self.assertEqual(3, exFile._worksheet.max_column)
+
+        test1()
+        test2()
+        test3()
+        self.assertTrue('Sheet' in exFile._workbook.sheetnames)
         self.assertTrue('abc' in exFile._workbook.sheetnames)
         self.assertTrue('def' in exFile._workbook.sheetnames)
         exFile.save()

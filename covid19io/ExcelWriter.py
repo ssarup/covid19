@@ -3,9 +3,12 @@ from covid19io.OutputWriter import OutputWriter
 
 
 class ExcelWriter(OutputWriter):
-    def __init__(self, filename_):
+    def __init__(self, filename_, openExisting=False):
         self._filename = filename_
-        self._workbook = openpyxl.Workbook()
+        if openExisting:
+            self._workbook = openpyxl.load_workbook(filename=self._filename)
+        else:
+            self._workbook = openpyxl.Workbook()
         self._worksheet = self._workbook.active
         self._activeSheetName = self._worksheet.title
         self._rowNum = 1
