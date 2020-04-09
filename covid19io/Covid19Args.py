@@ -7,6 +7,7 @@ class Covid19Args(object):
         self._parser = None
         self._inputfile = None
         self._locationList = None
+        self._templateOutputFile = None
         self._outputfile = None
 
     @staticmethod
@@ -33,18 +34,31 @@ class Covid19Args(object):
         return self._locationList
 
     @property
+    def templateOutput(self):
+        return self._templateOutputFile
+
+    @property
     def outputfile(self):
         return self._outputfile
 
     def setup(self):
         self._parser = argparse.ArgumentParser(description='Covid19 analytics.')
-        self._parser.add_argument('filename', type=str,
+        self._parser.add_argument('--input', type=str, required=True,
                                   help='name of input file')
-        self._parser.add_argument('location', type=str,
+        self._parser.add_argument('--location', type=str, required=True,
                                   help='comma-separated location as Country/State/County or State/County')
-        self._parser.add_argument('outputFile', type=str,
+        self._parser.add_argument('--templateOutput', type=str, required=True,
+                                  help='name of template Excel to use for output file')
+        self._parser.add_argument('--output', type=str, required=True,
                                   help='name of output file')
-        args = self._parser.parse_args()
-        self._inputfile = args.filename
+
+    def parse(self, testList_=None):
+        # testList_ is used for testing.
+        if testList_ is None:
+            args = self._parser.parse_args()
+        else:
+            args = self._parser.parse_args(testList_)
+        self._inputfile = args.input
         self._locationList = Covid19Args._getLocationArgs(args.location)
-        self._outputfile = args.outputFile
+        self._templateOutputFile = args.templateOutput
+        self._outputfile = args.output

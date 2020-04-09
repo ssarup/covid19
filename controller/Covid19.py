@@ -10,6 +10,7 @@ from transform.Covid19Utils import Covid19Utils
 if __name__ == '__main__':
     args = Covid19Args()
     args.setup()
+    args.parse()
 
     rdr = FileReader(args.inputfile)
     tx = Covid19CSVTransformer();
@@ -19,15 +20,7 @@ if __name__ == '__main__':
     for covid19Obj in tx.getCollection():
         Covid19Utils.addCSVToObsCollection(covid19Obj, coll)
 
-    # print(str(coll))
-    # print('Read the following locations ->')
-    # for loc in coll.locations():
-    #     print(str(loc))
-
-    # TODO Change input template file name to an argument.
-    writer = ExcelWriter('/Users/developer/Downloads/covid19Template3.xlsm', openExisting=True, hasMacros=True)
-    # TODO Handle this better.
-    # writer.writeLine(ObsCollection.headerForOutput(), header_=True)
+    writer = ExcelWriter(args.templateOutput, openExisting=True, hasMacros=True)
     writer._rowNum = 2
 
     for locStr in args.locationList:

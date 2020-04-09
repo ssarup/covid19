@@ -5,6 +5,7 @@ from covid19io.OutputWriter import OutputWriter
 
 class ExcelWriter(OutputWriter):
     def __init__(self, filename_, openExisting=False, hasMacros=False):
+        print('xx', filename_)
         self._filename = filename_
         if openExisting:
             self._workbook = openpyxl.load_workbook(filename=self._filename, keep_vba=hasMacros)

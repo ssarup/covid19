@@ -36,4 +36,50 @@ class TestCovid19Args(TestCase):
         test3()
 
     def test_setup(self):
-        pass
+        args = Covid19Args()
+        self.assertIsNone(args._parser)
+        self.assertIsNone(args._inputfile)
+        self.assertIsNone(args._locationList)
+        self.assertIsNone(args._templateOutputFile)
+        self.assertIsNone(args._outputfile)
+        args.setup()
+        self.assertIsNotNone(args._parser)
+        self.assertIsNone(args._inputfile)
+        self.assertIsNone(args._locationList)
+        self.assertIsNone(args._templateOutputFile)
+        self.assertIsNone(args._outputfile)
+
+    def test_parse(self):
+        testList = [ '--input', 'aaa',
+                     '--location', 'bbb/ccc/ddd, eee/fff/ggg',
+                     '--templateOutput', 'hhh',
+                     '--output', 'jjj']
+        args = Covid19Args()
+
+        def test_inputFile():
+            self.assertIsNotNone(args.inputfile)
+            self.assertEqual('aaa', args.inputfile)
+
+        def test_locationList():
+            self.assertIsNotNone(args.locationList)
+            self.assertEqual(['bbb/ccc/ddd', 'eee/fff/ggg'], args.locationList)
+
+        def test_templateOutputFile():
+            self.assertIsNotNone(args.templateOutput)
+            self.assertEqual('hhh', args.templateOutput)
+
+        def test_outputFile():
+            self.assertIsNotNone(args.outputfile)
+            self.assertEqual('jjj', args.outputfile)
+
+        args.setup()
+        self.assertIsNotNone(args._parser)
+        self.assertIsNone(args._inputfile)
+        self.assertIsNone(args._locationList)
+        self.assertIsNone(args._templateOutputFile)
+        self.assertIsNone(args._outputfile)
+        args.parse(testList)
+        test_inputFile()
+        test_locationList()
+        test_templateOutputFile()
+        test_outputFile()
