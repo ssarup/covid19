@@ -1,5 +1,9 @@
 # from shutil import copyfile
+from datetime import datetime
 from unittest import TestCase
+
+import openpyxl
+
 from covid19io.ExcelWriter import ExcelWriter
 
 
@@ -47,6 +51,36 @@ class TestExcelWriter(TestCase):
         self.assertTrue('abc' in exFile._workbook.sheetnames)
         self.assertTrue('def' in exFile._workbook.sheetnames)
 
+    def test_setFormatting(self):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        currCell = ws['A1']
+        self.assertEqual('General', currCell.number_format)
+        currCell.number_format = 'General'
+        self.assertEqual('General', currCell.number_format)
+
+        def test1():
+            val = 1
+            self.assertIsInstance(val, int)
+            ExcelWriter._setFormatting(currCell, val)
+            self.assertEqual('0', currCell.number_format)
+
+        def test2():
+            val = datetime.strptime('1/1/2020', '%m/%d/%Y')
+            self.assertIsInstance(val, datetime)
+            ExcelWriter._setFormatting(currCell, val)
+            self.assertEqual('MM/DD/YYYY', currCell.number_format)
+
+        def test3():
+            val = 'abc'
+            self.assertIsInstance(val, str)
+            ExcelWriter._setFormatting(currCell, val)
+            self.assertEqual('@', currCell.number_format)
+
+        test1()
+        test2()
+        test3()
+
     def setUp(self):
         self._verifyList = [
             ('abc', '01/02/2020', 10),
@@ -85,6 +119,10 @@ class TestExcelWriter(TestCase):
                 for j in range(1, 3):
                     currCell = exFile._worksheet.cell(row=i, column=j)
                     self.assertEqual(self._verifyList[i-1][j-1], currCell.value)
+                    if j <= 2:
+                        self.assertEqual('@', currCell.number_format)
+                    else:
+                        self.assertEqual('0', currCell.number_format)
 
         def test2():
             exFile.setActiveSheet('def')
@@ -208,3 +246,4 @@ class TestExcelWriter(TestCase):
         self.assertTrue('abc' in exFile._workbook.sheetnames)
         self.assertTrue('def' in exFile._workbook.sheetnames)
         exFile.save('/Users/developer/Downloads/test2.xlsx')
+

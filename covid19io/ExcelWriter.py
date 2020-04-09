@@ -1,3 +1,4 @@
+from datetime import datetime
 import openpyxl
 from covid19io.OutputWriter import OutputWriter
 
@@ -22,6 +23,15 @@ class ExcelWriter(OutputWriter):
     def activeSheetName(self):
         return self._activeSheetName
 
+    @staticmethod
+    def _setFormatting(cell_, valueForFormatting_):
+        if type(valueForFormatting_) == int:
+            cell_.number_format = openpyxl.styles.numbers.FORMAT_NUMBER
+        elif type(valueForFormatting_) == datetime:
+            cell_.number_format = 'MM/DD/YYYY'
+        elif type(valueForFormatting_) == str:
+            cell_.number_format = openpyxl.styles.numbers.FORMAT_TEXT
+
     def setActiveSheet(self, sheetName_):
         self._worksheet = self._workbook.create_sheet(sheetName_)
         self._activeSheetName = sheetName_
@@ -33,7 +43,9 @@ class ExcelWriter(OutputWriter):
         assert isinstance(header_, bool)
         for item in tup_:
             currCell = self._worksheet.cell(row=self._rowNum, column=self._column)
-            currCell.value = str(item)
+            # print('xx', type(item), item, str(tup_))
+            ExcelWriter._setFormatting(currCell, item)
+            currCell.value = item
             self._column = self._column + 1
         self._rowNum = self._rowNum + 1
         self._column = 1

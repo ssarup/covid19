@@ -22,7 +22,9 @@ class Covid19CSV(object):
         self._dateList = dateList_[0:maxEntries]
         for dt in self._dateList:
             assert isinstance(dt, str)
-            self._date2Value[dt] = valueAsTuple_[i]
+            # Convert value to int.
+            # TODO is there a way to make this more generic.
+            self._date2Value[dt] = int(valueAsTuple_[i])
             # print('{0} = {1} -> {2}'.format(i, dt, valueAsTuple_[i]))
             i = i + 1
 

@@ -24,13 +24,17 @@ if __name__ == '__main__':
     # for loc in coll.locations():
     #     print(str(loc))
 
-    writer = ExcelWriter(args.outputfile)
-    writer.writeLine(ObsCollection.headerForOutput(), header_=True)
+    # TODO Change input template file name to an argument.
+    writer = ExcelWriter('/Users/developer/Downloads/covid19Template5.xlsx', openExisting=True)
+    # TODO Handle this better.
+    # writer.writeLine(ObsCollection.headerForOutput(), header_=True)
+    writer._rowNum = 2
 
     for locStr in args.locationList:
         loc = CmdLineToLocation.makeLocation(locStr)
         print('Adding values for location "{0}/{1}/{2}".'.format(loc.country, loc.state, loc.county))
         for obs in coll.getObservations(loc):
-            outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value.strftime('%m/%d/%Y'), obs.value)
+            # outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value.strftime('%m/%d/%Y'), obs.value)
+            outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value, obs.value)
             writer.writeLine(outputTup, header_=False)
-    writer.save()
+    writer.save(args.outputfile)
