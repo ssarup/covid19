@@ -100,4 +100,7 @@ class TestObsCollection(TestCase):
                 # print("obs = {0}".format(str(obs)))
                 verifyObservation(loc, obs)
 
-        # print(str(coll))
+    def test_headerForOutput(self):
+        checkStr = "('Country', 'State', 'County', 'City', 'Date', 'Observation')"
+        self.assertEqual(checkStr, str(ObsCollection.headerForOutput()))
+        # print('('Country', 'State', 'County', 'City', 'Date', 'Observation'), str(ObsCollection.headerForOutput()))

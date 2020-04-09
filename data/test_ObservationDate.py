@@ -60,3 +60,9 @@ class TestDateValue(TestCase):
         self.assertNotEqual(a._value, c._value)
         self.assertNotEqual(b._value, c._value)
 
+    def test_value(self):
+        def createDateValue(str_):
+            return ObservationDate.fromMDY(str_)
+
+        a = createDateValue('1/1/2020')
+        self.assertEqual('01/01/2020', a.value.strftime('%m/%d/%Y'))

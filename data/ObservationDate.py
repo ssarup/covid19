@@ -28,6 +28,10 @@ class ObservationDate(object):
         assert isinstance(value_, datetime.datetime)
         self._value = value_
 
+    @property
+    def value(self):
+        return self._value
+
     def __str__(self):
         if self._value is None:
             return "[]"

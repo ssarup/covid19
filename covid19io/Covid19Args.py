@@ -7,6 +7,7 @@ class Covid19Args(object):
         self._parser = None
         self._inputfile = None
         self._locationList = None
+        self._outputfile = None
 
     @staticmethod
     def _getLocationArgs(locStr_):
@@ -31,12 +32,19 @@ class Covid19Args(object):
     def locationList(self):
         return self._locationList
 
+    @property
+    def outputfile(self):
+        return self._outputfile
+
     def setup(self):
         self._parser = argparse.ArgumentParser(description='Covid19 analytics.')
         self._parser.add_argument('filename', type=str,
                                   help='name of input file')
         self._parser.add_argument('location', type=str,
                                   help='comma-separated location as Country/State/County or State/County')
+        self._parser.add_argument('outputFile', type=str,
+                                  help='name of output file')
         args = self._parser.parse_args()
         self._inputfile = args.filename
         self._locationList = Covid19Args._getLocationArgs(args.location)
+        self._outputfile = args.outputFile

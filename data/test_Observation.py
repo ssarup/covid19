@@ -10,6 +10,8 @@ class TestObservation(TestCase):
         self.assertIsNotNone(t)
         self.assertEqual(t._obsDate._value, ObservationDate.fromMDY("2/1/2020")._value)
         self.assertEqual(t._value, 5)
+        self.assertEqual('02/01/2020', t.obsDate.value.strftime('%m/%d/%Y'))
+        self.assertEqual(5, t.value)
 
         t._obsDate = ObservationDate.fromMDY("3/1/2020")
         self.assertEqual(t._value, 5)

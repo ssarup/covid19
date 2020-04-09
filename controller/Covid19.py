@@ -1,3 +1,4 @@
+from covid19io.ExcelWriter import ExcelWriter
 from covid19io.FileReader import FileReader
 from data.ObsCollection import ObsCollection
 from covid19io.Covid19Args import Covid19Args
@@ -19,14 +20,18 @@ if __name__ == '__main__':
         Covid19Utils.addCSVToObsCollection(covid19Obj, coll)
 
     # print(str(coll))
+    # print('Read the following locations ->')
+    # for loc in coll.locations():
+    #     print(str(loc))
 
-    print('Read the following locations ->')
-    for loc in coll.locations():
-        print(str(loc))
+    writer = ExcelWriter(args.outputfile)
+    writer.setActiveSheet('RawData')
+    writer.writeLine(ObsCollection.headerForOutput(), header_=True)
 
     for locStr in args.locationList:
         loc = CmdLineToLocation.makeLocation(locStr)
-        print('Values for location "{0}/{1}/{2}" are ->'.format(loc.country, loc.state, loc.county))
+        print('Adding values for location "{0}/{1}/{2}".'.format(loc.country, loc.state, loc.county))
         for obs in coll.getObservations(loc):
-            print('"{0}","{1}",{2},{3}'.format(loc.state,loc.county,obs._obsDate._value.strftime('%m/%d/%Y'), obs._value))
-        print("\n")
+            outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value.strftime('%m/%d/%Y'), obs.value)
+            writer.writeLine(outputTup, header_=False)
+    writer.save()

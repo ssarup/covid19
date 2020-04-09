@@ -8,6 +8,10 @@ class ObsCollection(object):
         self._obs = []          # List of Observations.
         self._loc2Obs = {}      # Location to Observation array.
 
+    @staticmethod
+    def headerForOutput():
+        return ('Country', 'State', 'County', 'City', 'Date', 'Observation')
+
     def addObservation(self, loc_, date_, value_):
         assert isinstance(loc_, Location)
         assert isinstance(date_, ObservationDate)

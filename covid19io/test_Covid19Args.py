@@ -36,5 +36,4 @@ class TestCovid19Args(TestCase):
         test3()
 
     def test_setup(self):
-
         pass
