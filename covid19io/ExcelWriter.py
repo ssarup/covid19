@@ -38,6 +38,9 @@ class ExcelWriter(OutputWriter):
         self._rowNum = self._rowNum + 1
         self._column = 1
 
-    def save(self):
-        self._workbook.save(filename=self._filename)
+    def save(self, filename=None):
+        if filename is None:
+            self._workbook.save(filename=self._filename)
+        else:
+            self._workbook.save(filename=filename)
 

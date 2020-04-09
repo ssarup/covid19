@@ -1,4 +1,4 @@
-from shutil import copyfile
+# from shutil import copyfile
 from unittest import TestCase
 from covid19io.ExcelWriter import ExcelWriter
 
@@ -151,12 +151,12 @@ class TestExcelWriter(TestCase):
         exFile.save()
 
     def test_openExisting(self):
-        copyfile('/Users/developer/Downloads/test.xlsx',
-                 '/Users/developer/Downloads/test2.xlsx')
-        exFile = ExcelWriter('/Users/developer/Downloads/test2.xlsx', openExisting=True)
+        # copyfile('/Users/developer/Downloads/test.xlsx',
+        #          '/Users/developer/Downloads/test2.xlsx')
+        exFile = ExcelWriter('/Users/developer/Downloads/test.xlsx', openExisting=True)
 
         def test1():
-            self.assertEqual('/Users/developer/Downloads/test2.xlsx', exFile.filename)
+            self.assertEqual('/Users/developer/Downloads/test.xlsx', exFile.filename)
             self.assertIsNotNone(exFile._workbook)
             self.assertIsNotNone(exFile._worksheet)
             self.assertEqual('Sheet', exFile._activeSheetName)
@@ -207,4 +207,4 @@ class TestExcelWriter(TestCase):
         self.assertTrue('Sheet' in exFile._workbook.sheetnames)
         self.assertTrue('abc' in exFile._workbook.sheetnames)
         self.assertTrue('def' in exFile._workbook.sheetnames)
-        exFile.save()
+        exFile.save('/Users/developer/Downloads/test2.xlsx')
