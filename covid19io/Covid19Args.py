@@ -1,11 +1,14 @@
 import argparse
 import csv
+from datetime import datetime
+from constants.Covid19Constants import Covid19Constants
 
 
 class Covid19Args(object):
     def __init__(self):
         self._parser = None
         self._inputfile = None
+        self._download = False
         self._locationList = None
         self._templateOutputFile = None
         self._outputfile = None
@@ -25,9 +28,23 @@ class Covid19Args(object):
         # print(locStr_, str([locStr_]), str(locReader), type(locReader))
         return list(filter(isValid, list(locReader)[0]))
 
+    @staticmethod
+    def downloadFilename(timeSuffix=None):
+        today = datetime.today()
+        if timeSuffix is None:
+            timeSuffix = today.strftime('%H%M')
+        filename = '{0}_{1}{2}.csv'.format(Covid19Constants.CONFIRMED_FILE_PREFIX,
+                                           today.strftime('%Y%m%d'), timeSuffix)
+        fileWithPath = '{0}/{1}'.format(Covid19Constants.DOWNLOAD_FOLDER, filename)
+        return fileWithPath
+
     @property
     def inputfile(self):
         return self._inputfile
+
+    @property
+    def download(self):
+        return self._download
 
     @property
     def locationList(self):
@@ -43,8 +60,10 @@ class Covid19Args(object):
 
     def setup(self):
         self._parser = argparse.ArgumentParser(description='Covid19 analytics.')
-        self._parser.add_argument('--input', type=str, required=True,
+        self._parser.add_argument('--input', type=str,
                                   help='name of input file')
+        self._parser.add_argument('--download', action='store_true',
+                                  help='download the file from the web')
         self._parser.add_argument('--location', type=str, required=True,
                                   help='comma-separated location as Country/State/County or State/County')
         self._parser.add_argument('--templateOutput', type=str, required=True,
@@ -59,6 +78,7 @@ class Covid19Args(object):
         else:
             args = self._parser.parse_args(testList_)
         self._inputfile = args.input
+        self._download = args.download
         self._locationList = Covid19Args._getLocationArgs(args.location)
         self._templateOutputFile = args.templateOutput
         self._outputfile = args.output

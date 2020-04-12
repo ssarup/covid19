@@ -1,5 +1,7 @@
 from unittest import TestCase
+from datetime import datetime
 from covid19io.Covid19Args import Covid19Args
+from constants.Covid19Constants import Covid19Constants
 
 
 class TestCovid19Args(TestCase):
@@ -35,16 +37,27 @@ class TestCovid19Args(TestCase):
         test2()
         test3()
 
+    def test_downloadFilename(self):
+        timeSuffix = 2014
+        today = datetime.today().strftime('%Y%m%d')
+        checkFilename = '{0}/{1}_{2}{3}.csv'.format(Covid19Constants.DOWNLOAD_FOLDER,
+                                                    Covid19Constants.CONFIRMED_FILE_PREFIX,
+                                                    today, timeSuffix)
+        self.assertNotEqual(checkFilename, Covid19Args.downloadFilename())
+        self.assertEqual(checkFilename, Covid19Args.downloadFilename(timeSuffix=timeSuffix))
+
     def test_setup(self):
         args = Covid19Args()
         self.assertIsNone(args._parser)
         self.assertIsNone(args._inputfile)
         self.assertIsNone(args._locationList)
+        self.assertFalse(args.download)
         self.assertIsNone(args._templateOutputFile)
         self.assertIsNone(args._outputfile)
         args.setup()
         self.assertIsNotNone(args._parser)
         self.assertIsNone(args._inputfile)
+        self.assertFalse(args.download)
         self.assertIsNone(args._locationList)
         self.assertIsNone(args._templateOutputFile)
         self.assertIsNone(args._outputfile)
@@ -53,12 +66,18 @@ class TestCovid19Args(TestCase):
         testList = [ '--input', 'aaa',
                      '--location', 'bbb/ccc/ddd, eee/fff/ggg',
                      '--templateOutput', 'hhh',
+                     '--download',
                      '--output', 'jjj']
         args = Covid19Args()
 
         def test_inputFile():
             self.assertIsNotNone(args.inputfile)
             self.assertEqual('aaa', args.inputfile)
+
+        def test_download():
+            self.assertIsNotNone(args.download)
+            # print(args.download)
+            self.assertTrue(args.download)
 
         def test_locationList():
             self.assertIsNotNone(args.locationList)
@@ -75,6 +94,7 @@ class TestCovid19Args(TestCase):
         args.setup()
         self.assertIsNotNone(args._parser)
         self.assertIsNone(args._inputfile)
+        self.assertFalse(args.download)
         self.assertIsNone(args._locationList)
         self.assertIsNone(args._templateOutputFile)
         self.assertIsNone(args._outputfile)
@@ -83,3 +103,4 @@ class TestCovid19Args(TestCase):
         test_locationList()
         test_templateOutputFile()
         test_outputFile()
+        test_download()

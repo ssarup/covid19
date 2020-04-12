@@ -1,5 +1,0 @@
-venv/
-.idea/
-covid19io/__pycache__/
-data/__pycache__/
-transform/__pycache__/

@@ -1,3 +1,5 @@
+from constants.Covid19Constants import Covid19Constants
+from covid19io.Covid19InputDownloader import Covid19InputDownloader
 from covid19io.ExcelWriter import ExcelWriter
 from covid19io.FileReader import FileReader
 from data.ObsCollection import ObsCollection
@@ -12,7 +14,14 @@ if __name__ == '__main__':
     args.setup()
     args.parse()
 
-    rdr = FileReader(args.inputfile)
+    if args.download:
+        downloadFilename = args.downloadFilename()
+        inputfile = Covid19InputDownloader.downloadFile(Covid19Constants.DOWNLOAD_URL,
+                                                        downloadFilename)
+        rdr = FileReader(inputfile)
+    else:
+        rdr = FileReader(args.inputfile)
+
     tx = Covid19CSVTransformer();
     rdr.read(tx)
     coll = ObsCollection()
