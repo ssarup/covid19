@@ -34,7 +34,7 @@ class Covid19CSV(object):
             dateValOut = [', [']
             dateValOut.append(k)
             dateValOut.append(' -> ')
-            dateValOut.append(self._date2Value[k])
+            dateValOut.append(str(self._date2Value[k]))
             dateValOut.append(']')
             retVal.append(''.join(dateValOut))
         retVal.append(']')
