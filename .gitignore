@@ -1,0 +1,6 @@
+.idea/
+constants/__pycache__/
+covid19io/__pycache__/
+data/__pycache__/
+transform/__pycache__/
+venv/
