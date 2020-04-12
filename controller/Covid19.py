@@ -19,6 +19,7 @@ if __name__ == '__main__':
         inputfile = Covid19InputDownloader.downloadFile(Covid19Constants.DOWNLOAD_URL,
                                                         downloadFilename)
         rdr = FileReader(inputfile)
+        print('\nDownloaded file saved as "{0}".\n'.format(inputfile))
     else:
         rdr = FileReader(args.inputfile)
 

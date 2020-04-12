@@ -69,7 +69,7 @@ class TestExcelWriter(TestCase):
             val = datetime.strptime('1/1/2020', '%m/%d/%Y')
             self.assertIsInstance(val, datetime)
             ExcelWriter._setFormatting(currCell, val)
-            self.assertEqual('MM/DD/YYYY', currCell.number_format)
+            self.assertEqual('yyyy-mm-dd', currCell.number_format)
 
         def test3():
             val = 'abc'

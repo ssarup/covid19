@@ -29,7 +29,7 @@ class ExcelWriter(OutputWriter):
         if type(valueForFormatting_) == int:
             cell_.number_format = openpyxl.styles.numbers.FORMAT_NUMBER
         elif type(valueForFormatting_) == datetime:
-            cell_.number_format = 'MM/DD/YYYY'
+            cell_.number_format = openpyxl.styles.numbers.FORMAT_DATE_YYYYMMDD2
         elif type(valueForFormatting_) == str:
             cell_.number_format = openpyxl.styles.numbers.FORMAT_TEXT
 
