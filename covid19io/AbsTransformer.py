@@ -7,7 +7,7 @@ class AbsTransformer(object):
         """
         Special processing for first line, assuming it could be a header.
         Can be used to setup the columns that need to be read.
-        :param headerColsAsList_: list of header columns
+        :param headerColsList_: list of header columns
         :return: None
         """
         pass
