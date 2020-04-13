@@ -13,10 +13,10 @@ class AbsTransformer(object):
         pass
 
     @abstractmethod
-    def columnsToRead(self):
+    def listOfIndexesOfColumnsToRead(self):
         """
-        Columns to read from input file.
-        :return: List of columns to read
+        Index number of columns to read from input file.
+        :return: List of index numbers of columns to read
         """
         pass
 
@@ -54,7 +54,7 @@ class AbsTransformer(object):
             self.processHeader(lineList_)
         else:
             impColumnList = []
-            for col in self.columnsToRead():
+            for col in self.listOfIndexesOfColumnsToRead():
                 impColumnList.append(lineList_[col])
             obj = self.createObject(tuple(impColumnList))
             self.addToCollection(obj)

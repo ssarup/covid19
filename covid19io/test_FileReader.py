@@ -17,7 +17,7 @@ class TestFileReader(TestCase):
         def processHeader(self, headerColsList_):
             self._colToRead = [2, 6, 5]
 
-        def columnsToRead(self):
+        def listOfIndexesOfColumnsToRead(self):
             return self._colToRead
 
         def createObject(self, colsAsTuple_):
