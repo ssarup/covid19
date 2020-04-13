@@ -170,7 +170,7 @@ class TestCovid19USTransformer(TestCase):
         numDateCols = len(headerAsTuple) - firstDatePos
         self.assertTrue(numDateCols > 0)
 
-        l1 = t1.columnsToRead()
+        l1 = t1.listOfIndexesOfColumnsToRead()
         self.assertEqual(numDateCols + 3, len(l1))
         self.assertEqual(0, len(t1._objColl))
         self.assertEqual(numDateCols, len(t1._dateList))
@@ -178,15 +178,15 @@ class TestCovid19USTransformer(TestCase):
         l1AsTuple = tuple(l1)
 
         countryCol = headerAsTuple.index('iso3')
-        self.assertTrue(countryCol > 0)
+        self.assertTrue(countryCol >= 0)
         self.assertTrue(l1AsTuple.index(countryCol) >= 0)
 
         stateCol = headerAsTuple.index('Province_State')
-        self.assertTrue(stateCol > 0)
+        self.assertTrue(stateCol >= 0)
         self.assertTrue(l1AsTuple.index(stateCol) >= 0)
 
         countyCol = headerAsTuple.index('Admin2')
-        self.assertTrue(countyCol > 0)
+        self.assertTrue(countyCol >= 0)
         self.assertTrue(l1AsTuple.index(countyCol) >= 0)
 
         # Check all date column header numbers are included.
@@ -209,7 +209,7 @@ class TestCovid19USTransformer(TestCase):
         firstDatePos = headerAsTuple.index('Combined_Key') + 1
         numDateCols = len(headerAsTuple) - firstDatePos
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
         self.assertEqual(numDateCols + 3, len(colList))
 
         for i in range(0, len(self._inputListFromFile)):
@@ -231,7 +231,7 @@ class TestCovid19USTransformer(TestCase):
         t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
 
         for line in self._inputListFromFile:
             lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
@@ -251,7 +251,7 @@ class TestCovid19USTransformer(TestCase):
         t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
 
         for line in self._inputListFromFile:
             lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
