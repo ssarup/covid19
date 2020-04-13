@@ -42,11 +42,11 @@ class TestObservation(TestCase):
 
         def testLogValues():
             t = Observation(d, -1)
-            self.assertIsNone(t.log2Value)
-            self.assertIsNone(t.lnValue)
+            self.assertEqual(0.0, t.log2Value)
+            self.assertEqual(0.0, t.lnValue)
             t = Observation(d, 0)
-            self.assertIsNone(t.log2Value)
-            self.assertIsNone(t.lnValue)
+            self.assertEqual(0.0, t.log2Value)
+            self.assertEqual(0.0, t.lnValue)
             t = Observation(d, 1)
             self.assertEqual(log(1, 2), t.log2Value)
             self.assertEqual(log(1), t.lnValue)

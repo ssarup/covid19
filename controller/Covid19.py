@@ -38,6 +38,7 @@ if __name__ == '__main__':
         print('Adding values for location "{0}/{1}/{2}".'.format(loc.country, loc.state, loc.county))
         for obs in coll.getObservations(loc):
             # outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value.strftime('%m/%d/%Y'), obs.value)
-            outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value, obs.value)
+            outputTup = (loc.country, loc.state, loc.county, '', obs.obsDate.value,
+                         obs.value, obs.log2Value, obs.lnValue)
             writer.writeLine(outputTup, header_=False)
     writer.save(args.outputfile)

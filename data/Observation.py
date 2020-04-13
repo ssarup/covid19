@@ -8,8 +8,8 @@ class Observation(object):
         self._obsDate = date_
         self._value = value_
         if value_ <= 0:
-            self._log2Value = None
-            self._lnValue = None
+            self._log2Value = 0.0
+            self._lnValue = 0.0
         else:
             self._log2Value = log(self._value, 2)
             self._lnValue = log(self._value)
