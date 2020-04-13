@@ -1,6 +1,6 @@
 from unittest import TestCase
 from datetime import datetime
-from transform.Covid19CSVTransformer import Covid19CSV
+from transform.Covid19CSV import Covid19CSV
 from transform.Covid19Utils import Covid19Utils
 from data.ObsCollection import ObsCollection
 from data.Location import Location
