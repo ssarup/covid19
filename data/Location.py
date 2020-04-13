@@ -43,6 +43,8 @@ class Location(object):
                    self._state == other_._state and \
                    self._county == other_._county and \
                    self._city == other_._city
+        else:
+            return False
 
     def __hash__(self):
         return hash(str(self))

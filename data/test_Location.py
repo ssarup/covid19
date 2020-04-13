@@ -87,6 +87,8 @@ class TestLocation(TestCase):
             self.assertEqual(l1, l)
             l1 = Location(None)
             self.assertEqual(l1, l)
+            l1 = Location('', '', '')
+            self.assertNotEqual(10, l1)
 
         def test2():
             # Test for value
