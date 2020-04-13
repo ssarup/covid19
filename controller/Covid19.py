@@ -5,7 +5,7 @@ from covid19io.FileReader import FileReader
 from data.ObsCollection import ObsCollection
 from covid19io.Covid19Args import Covid19Args
 from transform.CmdLineToLocation import CmdLineToLocation
-from transform.Covid19CSVTransformer import Covid19CSVTransformer
+from transform.Covid19USTransformer import Covid19USTransformer
 from transform.Covid19Utils import Covid19Utils
 
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     else:
         rdr = FileReader(args.inputfile)
 
-    tx = Covid19CSVTransformer();
+    tx = Covid19USTransformer();
     rdr.read(tx)
     coll = ObsCollection()
     print("Read {0} lines from input file.".format(len(tx.getCollection())))

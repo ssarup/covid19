@@ -1,10 +1,10 @@
 from unittest import TestCase
 import csv
-from transform.Covid19CSVTransformer import Covid19CSVTransformer
+from transform.Covid19USTransformer import Covid19USTransformer
 from transform.Covid19CSV import Covid19CSV
 
 
-class TestCovid19CSVTransformer(TestCase):
+class TestCovid19USTransformer(TestCase):
     @staticmethod
     def _createVerificationObject(hdr_, str_):
         # Input string may have embedded commas in a field.
@@ -97,26 +97,26 @@ class TestCovid19CSVTransformer(TestCase):
         self._verificationObjects = []
         for l in self._inputListFromFile:
             self._verificationObjects.\
-                append(TestCovid19CSVTransformer._createVerificationObject(self._header, l))
+                append(TestCovid19USTransformer._createVerificationObject(self._header, l))
 
 
     def test_process_header(self):
         def test1():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader('')
             self.assertEqual(0, len(t1._colsToRead))
             self.assertEqual(0, len(t1._dateList))
 
         def test2():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader([])
             self.assertEqual(0, len(t1._colsToRead))
             self.assertEqual(0, len(t1._dateList))
 
         def test3():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader(['abc'])
             self.assertEqual(0, len(t1._colsToRead))
@@ -129,7 +129,7 @@ class TestCovid19CSVTransformer(TestCase):
             self.assertEqual(0, len(t1._dateList))
 
         def test4():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             # '"UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,1/22/2020...'
             # Before 'Combined_Key'.  'Combined_Key' is index #10.
@@ -159,7 +159,7 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_columns_to_read(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         colAsTuple = tuple(self._header.split(','))
         t1.processHeader(colAsTuple)
         self.assertEqual(0, len(t1._objColl))
@@ -204,7 +204,7 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_create_object(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         headerAsTuple = tuple(self._header.split(','))
         firstDatePos = headerAsTuple.index('Combined_Key') + 1
         numDateCols = len(headerAsTuple) - firstDatePos
@@ -214,7 +214,7 @@ class TestCovid19CSVTransformer(TestCase):
 
         for i in range(0, len(self._inputListFromFile)):
             line = self._inputListFromFile[i]
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             # print("xx = ", str(lineAsList))
             rawDataList = []
             for col in colList:
@@ -228,13 +228,13 @@ class TestCovid19CSVTransformer(TestCase):
             i = i + 1
 
     def test_add_to_collection(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
         colList = t1.columnsToRead()
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             rawDataList = []
             for col in colList:
                 rawDataList.append(lineAsList[col])
@@ -248,13 +248,13 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_get_collection(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
         colList = t1.columnsToRead()
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             rawDataList = []
             for col in colList:
                 rawDataList.append(lineAsList[col])
@@ -267,7 +267,7 @@ class TestCovid19CSVTransformer(TestCase):
             i = i + 1
 
     def test_process_line(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
 
         self.assertEqual(0, len(t1._colsToRead))
         self.assertEqual(0, len(t1._dateList))
@@ -278,7 +278,7 @@ class TestCovid19CSVTransformer(TestCase):
         self.assertEqual(0, len(t1._objColl))
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             t1.processLine(lineAsList, False)
         self.assertEqual(72, len(t1._colsToRead))
         self.assertEqual(69, len(t1._dateList))

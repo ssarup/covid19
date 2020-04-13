@@ -2,7 +2,7 @@ from covid19io.AbsTransformer import AbsTransformer
 from transform.Covid19CSV import Covid19CSV
 
 
-class Covid19CSVTransformer(AbsTransformer):
+class Covid19USTransformer(AbsTransformer):
     def __init__(self):
         # self._headerAsStr = headerAsStr_
         self._COLS_I_CARE_LIST = ['iso3', 'Province_State', 'Admin2']
