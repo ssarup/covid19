@@ -8,6 +8,7 @@ class Covid19Args(object):
     def __init__(self):
         self._parser = None
         self._inputfile = None
+        self._globalInputfile = None
         self._download = False
         self._locationList = None
         self._templateOutputFile = None
@@ -20,8 +21,11 @@ class Covid19Args(object):
             # print('xx', str_, type(str_))
             # Should have / in str_.
             # Should not begin with /.
-            # Should not end with /.
-            return '/' in str_ and '/' != str_.strip()[0] and '/' != str_.strip()[-1]
+            # Can end with /.
+            # USA/New Jersey/Middlesex is valid.
+            # So is India//.
+            # But must have at least two /.
+            return str_.count('/') >= 2 and '/' != str_.strip()[0]
 
         locReader = csv.reader([locStr_], delimiter=',', quotechar='"', skipinitialspace=True)
         # locReader is of type csv._reader.
@@ -43,6 +47,10 @@ class Covid19Args(object):
         return self._inputfile
 
     @property
+    def globalInputfile(self):
+        return self._globalInputfile
+
+    @property
     def download(self):
         return self._download
 
@@ -62,6 +70,8 @@ class Covid19Args(object):
         self._parser = argparse.ArgumentParser(description='Covid19 analytics.')
         self._parser.add_argument('--input', type=str,
                                   help='name of input file')
+        self._parser.add_argument('--globalInput', type=str,
+                                  help='name of input file for global data')
         self._parser.add_argument('--download', action='store_true',
                                   help='download the file from the web')
         self._parser.add_argument('--location', type=str, required=True,
@@ -78,6 +88,7 @@ class Covid19Args(object):
         else:
             args = self._parser.parse_args(testList_)
         self._inputfile = args.input
+        self._globalInputfile = args.globalInput
         self._download = args.download
         self._locationList = Covid19Args._getLocationArgs(args.location)
         self._templateOutputFile = args.templateOutput

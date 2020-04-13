@@ -20,18 +20,33 @@ class TestCovid19Args(TestCase):
             self.assertEqual([], Covid19Args._getLocationArgs('abc  /'))
             self.assertEqual([], Covid19Args._getLocationArgs('abc  / '))
             self.assertEqual([], Covid19Args._getLocationArgs('abc   /'))
-            self.assertEqual(['abc/def'], Covid19Args._getLocationArgs('abc/def'))
-            self.assertEqual(['abc / def'], Covid19Args._getLocationArgs('abc / def'))
-            self.assertEqual(['abc /def'], Covid19Args._getLocationArgs('abc /def'))
-            self.assertEqual(['abc xyz/def'], Covid19Args._getLocationArgs('abc xyz/def'))
+            self.assertEqual([], Covid19Args._getLocationArgs('//'))
+            self.assertEqual([], Covid19Args._getLocationArgs('///'))
+            self.assertEqual(['a//'], Covid19Args._getLocationArgs('a//'))
+            self.assertEqual(['a///'], Covid19Args._getLocationArgs('a///'))
+            self.assertEqual([], Covid19Args._getLocationArgs('abc/def'))
+            self.assertEqual([], Covid19Args._getLocationArgs('abc / def'))
+            self.assertEqual([], Covid19Args._getLocationArgs('abc /def'))
+            self.assertEqual([], Covid19Args._getLocationArgs('abc xyz/def'))
+            self.assertEqual(['abc/def/'], Covid19Args._getLocationArgs('abc/def/'))
+            self.assertEqual(['abc / def/'], Covid19Args._getLocationArgs('abc / def/'))
+            self.assertEqual(['abc / def /'], Covid19Args._getLocationArgs('abc / def /'))
+            self.assertEqual(['abc /def/ghi'], Covid19Args._getLocationArgs('abc /def/ghi'))
+            self.assertEqual(['abc /def/'], Covid19Args._getLocationArgs('abc /def/'))
+            self.assertEqual(['abc xyz/def / mno '], Covid19Args._getLocationArgs('abc xyz/def / mno '))
+            self.assertEqual(['India//'], Covid19Args._getLocationArgs('India//'))
+            self.assertEqual(['India/ / '], Covid19Args._getLocationArgs('India/ / '))
+            self.assertEqual(['India  //'], Covid19Args._getLocationArgs('India  //'))
 
         def test3():
             self.assertEqual([], Covid19Args._getLocationArgs('abc, def'))
-            self.assertEqual(['abc/xyz'], Covid19Args._getLocationArgs('abc/xyz, def'))
-            self.assertEqual(['abc/xyz', 'def/ghi'], Covid19Args._getLocationArgs('abc/xyz, def/ghi'))
-            self.assertEqual(['abc/xyz', 'def jkl/ghi'], Covid19Args._getLocationArgs('abc/xyz, "def jkl"/ghi'))
-            self.assertEqual(['abc/xyz', 'def jkl/ghi', 'mno /pqr'],
-                             Covid19Args._getLocationArgs('abc/xyz, "def jkl"/ghi, xyz, mno /pqr'))
+            self.assertEqual(['abc/xyz/'], Covid19Args._getLocationArgs('abc/xyz/, def'))
+            self.assertEqual(['abc/xyz/mno', 'def/ghi/jkl'],
+                             Covid19Args._getLocationArgs('abc/xyz/mno, def/ghi/jkl'))
+            self.assertEqual(['abc/xyz/mno', 'def jkl/ghi/jkl'],
+                             Covid19Args._getLocationArgs('abc/xyz/mno, "def jkl"/ghi/jkl'))
+            self.assertEqual(['abc/xyz/mno', 'def jkl/ghi stu/xyz', 'mno /pqr/'],
+                             Covid19Args._getLocationArgs('abc/xyz/mno, "def jkl"/ghi stu/xyz, xyz, mno /pqr/'))
 
         test1()
         test2()
@@ -63,16 +78,20 @@ class TestCovid19Args(TestCase):
         self.assertIsNone(args._outputfile)
 
     def test_parse(self):
-        testList = [ '--input', 'aaa',
-                     '--location', 'bbb/ccc/ddd, eee/fff/ggg',
-                     '--templateOutput', 'hhh',
-                     '--download',
-                     '--output', 'jjj']
+        testList = ['--input', 'aaa',
+                    '--location', 'bbb/ccc/ddd, eee/fff/ggg',
+                    '--templateOutput', 'hhh',
+                    '--download',
+                    '--output', 'jjj']
         args = Covid19Args()
 
         def test_inputFile():
             self.assertIsNotNone(args.inputfile)
             self.assertEqual('aaa', args.inputfile)
+
+        def test_globalInputfile():
+            self.assertIsNotNone(args.inputfile)
+            self.assertEqual('kkk', args.globalInputfile)
 
         def test_download():
             self.assertIsNotNone(args.download)
@@ -94,6 +113,7 @@ class TestCovid19Args(TestCase):
         args.setup()
         self.assertIsNotNone(args._parser)
         self.assertIsNone(args._inputfile)
+        self.assertIsNone(args.globalInputfile)
         self.assertFalse(args.download)
         self.assertIsNone(args._locationList)
         self.assertIsNone(args._templateOutputFile)
@@ -104,3 +124,13 @@ class TestCovid19Args(TestCase):
         test_templateOutputFile()
         test_outputFile()
         test_download()
+
+        testList.append('--globalInput')
+        testList.append('kkk')
+        args.parse(testList)
+        test_inputFile()
+        test_locationList()
+        test_templateOutputFile()
+        test_outputFile()
+        test_download()
+        test_globalInputfile()
