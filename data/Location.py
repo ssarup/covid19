@@ -21,6 +21,18 @@ class Location(object):
     def city(self):
         return self._city
 
+    def locationAsStr(self):
+        retList = []
+        if self._country is not None:
+            retList.append(self._country)
+        retList.append('/')
+        if self._state is not None:
+            retList.append(self._state)
+        retList.append('/')
+        if self._county is not None:
+            retList.append(self._county)
+        return ''.join(retList)
+
     @country.setter
     def country(self, country_):
         return Location(country_, self._state, self._county, self._city)
@@ -43,6 +55,8 @@ class Location(object):
                    self._state == other_._state and \
                    self._county == other_._county and \
                    self._city == other_._city
+        else:
+            return False
 
     def __hash__(self):
         return hash(str(self))

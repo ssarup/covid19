@@ -1,67 +1,10 @@
 from unittest import TestCase
-import datetime
 import csv
-from transform.Covid19CSVTransformer import Covid19CSV, Covid19CSVTransformer
+from transform.Covid19USTransformer import Covid19USTransformer
+from transform.Covid19CSV import Covid19CSV
 
 
-class TestCovid19CSV(TestCase):
-    @staticmethod
-    def _createDateValueData(numEntries_):
-        date2Val = {}
-        dateList = []
-        valueList = []
-        startDt = datetime.datetime.strptime('1/1/2020', '%m/%d/%Y')
-        for i in range(0, numEntries_):
-            dt = startDt + datetime.timedelta(days=i)
-            dtStr = dt.strftime('%m/%d/%Y')
-            date2Val[dtStr] = i
-            dateList.append(dtStr)
-            valueList.append(i)
-        return date2Val, dateList, tuple(valueList)
-
-    @staticmethod
-    def _compare2Hashes(h1_, h2_):
-        retVal = len(h1_.keys()) == len(h2_.keys())
-        s1 = set(h1_.keys())
-        s2 = set(h2_.keys())
-        retVal = retVal and len(s1) == len(s2)
-        retVal = retVal and len(s1.union(s2)) == len(s2)
-        retVal = retVal and len(s1.intersection(s2)) == len(s2)
-        for k in h1_.keys():
-            retVal = retVal and h1_[k] == h2_[k]
-        return retVal
-
-    def setUp(self):
-        self._NUM_ENTRIES = 10
-        (self._date2Val, self._dateList, self._valueTuple) = TestCovid19CSV._createDateValueData(self._NUM_ENTRIES)
-
-    def test_set_date2value(self):
-        o1 = Covid19CSV('abc', 'def', 'ghi')
-        self.assertEqual(o1._country, 'abc')
-        self.assertEqual(o1._state, 'def')
-        self.assertEqual(o1._county, 'ghi')
-        self.assertEqual(len(o1._dateList), 0)
-        self.assertEqual(len(o1._date2Value.keys()), 0)
-
-        self.assertEqual(len(self._date2Val.keys()), self._NUM_ENTRIES)
-        self.assertEqual(len(self._dateList), self._NUM_ENTRIES)
-        self.assertEqual(len(self._valueTuple), self._NUM_ENTRIES)
-
-        o1.setDate2Value(self._dateList, self._valueTuple)
-        self.assertEqual(len(o1._dateList), self._NUM_ENTRIES)
-        self.assertEqual(len(o1._date2Value.keys()), self._NUM_ENTRIES)
-        self.assertTrue(self._compare2Hashes(self._date2Val, o1._date2Value))
-
-        o1.setDate2Value(self._dateList[:len(self._dateList) - 1], self._valueTuple)
-        self.assertEqual(self._NUM_ENTRIES - 1, len(o1._dateList))
-        self.assertEqual(self._NUM_ENTRIES - 1, len(o1._date2Value.keys()))
-
-        o1.setDate2Value(self._dateList, self._valueTuple[:len(self._valueTuple) - 1])
-        self.assertEqual(self._NUM_ENTRIES - 1, len(o1._dateList))
-        self.assertEqual(self._NUM_ENTRIES - 1, len(o1._date2Value.keys()))
-
-
-class TestCovid19CSVTransformer(TestCase):
+class TestCovid19USTransformer(TestCase):
     @staticmethod
     def _createVerificationObject(hdr_, str_):
         # Input string may have embedded commas in a field.
@@ -154,26 +97,26 @@ class TestCovid19CSVTransformer(TestCase):
         self._verificationObjects = []
         for l in self._inputListFromFile:
             self._verificationObjects.\
-                append(TestCovid19CSVTransformer._createVerificationObject(self._header, l))
+                append(TestCovid19USTransformer._createVerificationObject(self._header, l))
 
 
     def test_process_header(self):
         def test1():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader('')
             self.assertEqual(0, len(t1._colsToRead))
             self.assertEqual(0, len(t1._dateList))
 
         def test2():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader([])
             self.assertEqual(0, len(t1._colsToRead))
             self.assertEqual(0, len(t1._dateList))
 
         def test3():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             t1.processHeader(['abc'])
             self.assertEqual(0, len(t1._colsToRead))
@@ -186,7 +129,7 @@ class TestCovid19CSVTransformer(TestCase):
             self.assertEqual(0, len(t1._dateList))
 
         def test4():
-            t1 = Covid19CSVTransformer()
+            t1 = Covid19USTransformer()
             self.assertEqual(0, len(t1._colsToRead))
             # '"UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,1/22/2020...'
             # Before 'Combined_Key'.  'Combined_Key' is index #10.
@@ -216,7 +159,7 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_columns_to_read(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         colAsTuple = tuple(self._header.split(','))
         t1.processHeader(colAsTuple)
         self.assertEqual(0, len(t1._objColl))
@@ -227,7 +170,7 @@ class TestCovid19CSVTransformer(TestCase):
         numDateCols = len(headerAsTuple) - firstDatePos
         self.assertTrue(numDateCols > 0)
 
-        l1 = t1.columnsToRead()
+        l1 = t1.listOfIndexesOfColumnsToRead()
         self.assertEqual(numDateCols + 3, len(l1))
         self.assertEqual(0, len(t1._objColl))
         self.assertEqual(numDateCols, len(t1._dateList))
@@ -235,15 +178,15 @@ class TestCovid19CSVTransformer(TestCase):
         l1AsTuple = tuple(l1)
 
         countryCol = headerAsTuple.index('iso3')
-        self.assertTrue(countryCol > 0)
+        self.assertTrue(countryCol >= 0)
         self.assertTrue(l1AsTuple.index(countryCol) >= 0)
 
         stateCol = headerAsTuple.index('Province_State')
-        self.assertTrue(stateCol > 0)
+        self.assertTrue(stateCol >= 0)
         self.assertTrue(l1AsTuple.index(stateCol) >= 0)
 
         countyCol = headerAsTuple.index('Admin2')
-        self.assertTrue(countyCol > 0)
+        self.assertTrue(countyCol >= 0)
         self.assertTrue(l1AsTuple.index(countyCol) >= 0)
 
         # Check all date column header numbers are included.
@@ -261,17 +204,17 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_create_object(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         headerAsTuple = tuple(self._header.split(','))
         firstDatePos = headerAsTuple.index('Combined_Key') + 1
         numDateCols = len(headerAsTuple) - firstDatePos
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
         self.assertEqual(numDateCols + 3, len(colList))
 
         for i in range(0, len(self._inputListFromFile)):
             line = self._inputListFromFile[i]
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             # print("xx = ", str(lineAsList))
             rawDataList = []
             for col in colList:
@@ -285,13 +228,13 @@ class TestCovid19CSVTransformer(TestCase):
             i = i + 1
 
     def test_add_to_collection(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             rawDataList = []
             for col in colList:
                 rawDataList.append(lineAsList[col])
@@ -305,13 +248,13 @@ class TestCovid19CSVTransformer(TestCase):
 
 
     def test_get_collection(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
         self.assertEqual(0, len(t1._objColl))
         t1.processHeader(self._header.split(','))
-        colList = t1.columnsToRead()
+        colList = t1.listOfIndexesOfColumnsToRead()
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             rawDataList = []
             for col in colList:
                 rawDataList.append(lineAsList[col])
@@ -324,7 +267,7 @@ class TestCovid19CSVTransformer(TestCase):
             i = i + 1
 
     def test_process_line(self):
-        t1 = Covid19CSVTransformer()
+        t1 = Covid19USTransformer()
 
         self.assertEqual(0, len(t1._colsToRead))
         self.assertEqual(0, len(t1._dateList))
@@ -335,7 +278,7 @@ class TestCovid19CSVTransformer(TestCase):
         self.assertEqual(0, len(t1._objColl))
 
         for line in self._inputListFromFile:
-            lineAsList = TestCovid19CSVTransformer._createListFromCSVLine(line)
+            lineAsList = TestCovid19USTransformer._createListFromCSVLine(line)
             t1.processLine(lineAsList, False)
         self.assertEqual(72, len(t1._colsToRead))
         self.assertEqual(69, len(t1._dateList))

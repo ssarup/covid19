@@ -19,7 +19,7 @@ class TestAbsTransformer(TestCase):
                     colNum = colsAsTuple_.index(hdr)
                     self._colsToRead.append(colNum)
 
-        def columnsToRead(self):
+        def listOfIndexesOfColumnsToRead(self):
             return self._colsToRead
 
         def createObject(self, colsAsTuple_):
@@ -71,8 +71,8 @@ class TestAbsTransformer(TestCase):
         hdrAsTuple = tuple(hdr.split(','))
         t1 = TestAbsTransformer.MyTransformer1()
         t1.processHeader(hdrAsTuple)
-        self.assertEqual(len(t1._header), len(t1.columnsToRead()))
-        self.assertEqual([0, 2, 1, 3], t1.columnsToRead())
+        self.assertEqual(len(t1._header), len(t1.listOfIndexesOfColumnsToRead()))
+        self.assertEqual([0, 2, 1, 3], t1.listOfIndexesOfColumnsToRead())
 
     def test_create_object(self):
         t1 = TestAbsTransformer.MyTransformer1()

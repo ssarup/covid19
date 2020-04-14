@@ -21,7 +21,7 @@ class AbsTransformerWithHeader(AbsTransformer):
             self.processHeader(lineList_)
         else:
             impColumnList = []
-            for col in self.columnsToRead():
+            for col in self.listOfIndexesOfColumnsToRead():
                 impColumnList.append(lineList_[col])
             obj = self.createObject(tuple(impColumnList))
             self.addToCollection(obj)
