@@ -2,7 +2,7 @@ import argparse
 import csv
 from datetime import datetime
 from constants.Covid19Constants import Covid19Constants
-from covid19io.InputFileTypes import InputFileTypes
+from controller.InputFileFactory import InputFileFactory
 
 
 class Covid19Args(object):
@@ -47,7 +47,7 @@ class Covid19Args(object):
             timeSuffix = today.strftime('%H%M')
 
         fileType2NameWithPath = {}
-        for fileType in InputFileTypes:
+        for fileType in InputFileFactory:
             filename = '{0}_{1}{2}.csv'.format(fileType.downloadFilePrefix(),
                                                today.strftime('%Y%m%d'), timeSuffix)
             fileWithPath = '{0}/{1}'.format(Covid19Constants.DOWNLOAD_FOLDER, filename)
