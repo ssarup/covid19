@@ -1,12 +1,12 @@
 from unittest import TestCase
 from datetime import datetime
 from transform.Covid19CSV import Covid19CSV
-from transform.Covid19Utils import Covid19Utils
+from transform.Covid19TransformUtils import Covid19TransformUtils
 from data.ObsCollection import ObsCollection
 from data.Location import Location
 
 
-class TestCovid19Utils(TestCase):
+class TestCovid19TransformUtils(TestCase):
     def test_add_csvto_obs_collection(self):
         def createLoc(s1_, s2_, s3_):
             return Location(country_=s1_, state_=s2_, county_=s3_)
@@ -14,7 +14,7 @@ class TestCovid19Utils(TestCase):
         def test1():
             cObj = Covid19CSV('aa', 'bb', 'cc')
             oColl = ObsCollection()
-            Covid19Utils.addCSVToObsCollection(cObj, oColl)
+            Covid19TransformUtils.addCSVToObsCollection(cObj, oColl)
             self.assertEqual(0, oColl.numObservations())
             self.assertEqual(0, len(oColl.locations()))
 
@@ -22,7 +22,7 @@ class TestCovid19Utils(TestCase):
             cObj = Covid19CSV('aa', 'bb', 'cc')
             cObj.setDate2Value(['1/1/2020'], (10,))
             oColl = ObsCollection()
-            Covid19Utils.addCSVToObsCollection(cObj, oColl)
+            Covid19TransformUtils.addCSVToObsCollection(cObj, oColl)
             self.assertEqual(1, oColl.numObservations())
             self.assertEqual(1, len(oColl.locations()))
             locations = list(oColl.locations())
@@ -38,7 +38,7 @@ class TestCovid19Utils(TestCase):
             cObj = Covid19CSV('aa', 'bb', 'cc')
             cObj.setDate2Value(['1/1/20'], (10,))
             oColl = ObsCollection()
-            Covid19Utils.addCSVToObsCollection(cObj, oColl)
+            Covid19TransformUtils.addCSVToObsCollection(cObj, oColl)
             self.assertEqual(1, oColl.numObservations())
             self.assertEqual(1, len(oColl.locations()))
             locations = list(oColl.locations())
@@ -78,7 +78,7 @@ class TestCovid19Utils(TestCase):
                     dates = list(dateList[i])
                     values = valueList[i]
                     covidObj.setDate2Value(dates, values)
-                    Covid19Utils.addCSVToObsCollection(covidObj, obsColl_)
+                    Covid19TransformUtils.addCSVToObsCollection(covidObj, obsColl_)
                     i = i + 1
 
             def verifyObs(obsColl_):

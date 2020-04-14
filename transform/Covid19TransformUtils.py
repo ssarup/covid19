@@ -4,7 +4,7 @@ from data.Location import Location
 from data.ObservationDate import ObservationDate
 
 
-class Covid19Utils(object):
+class Covid19TransformUtils(object):
 
     @staticmethod
     def addCSVToObsCollection(csvObj_, obsColl_):

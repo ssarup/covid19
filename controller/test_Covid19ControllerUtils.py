@@ -1,10 +1,19 @@
 from unittest import TestCase
+from controller.Covid19Args import Covid19Args
 
 
-class TestCovid19(TestCase):
+class TestCovid19ControllerUtils(TestCase):
     def test_setup_inputs_from_args(self):
         def testForDownload():
-            pass
+            args = Covid19Args()
+            args.setup()
+            argList = ['--input', 'aaa']
+
+            def testNoDownloadArg():
+                args.parse(argList)
+                self.assertIsFalse(args.download)
+
+            testNoDownloadArg()
 
         def testForUSInput():
             pass
