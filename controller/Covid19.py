@@ -16,8 +16,8 @@ if __name__ == '__main__':
     args.parse()
 
     if args.download:
-        downloadFilename = args.downloadFilename()
-        inputfile = Covid19InputDownloader.downloadFile(Covid19Constants.DOWNLOAD_URL,
+        downloadFilename = args.downloadFilenamesWithPath()
+        inputfile = Covid19InputDownloader.downloadFile(Covid19Constants.US_CONFIRMED_URL,
                                                         downloadFilename)
         rdr = FileReader(inputfile)
         print('\nDownloaded file saved as "{0}".\n'.format(inputfile))

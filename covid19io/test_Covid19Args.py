@@ -2,6 +2,7 @@ from unittest import TestCase
 from datetime import datetime
 from covid19io.Covid19Args import Covid19Args
 from constants.Covid19Constants import Covid19Constants
+from covid19io.InputFileTypes import InputFileTypes
 
 
 class TestCovid19Args(TestCase):
@@ -55,11 +56,13 @@ class TestCovid19Args(TestCase):
     def test_downloadFilename(self):
         timeSuffix = 2014
         today = datetime.today().strftime('%Y%m%d')
-        checkFilename = '{0}/{1}_{2}{3}.csv'.format(Covid19Constants.DOWNLOAD_FOLDER,
-                                                    Covid19Constants.CONFIRMED_FILE_PREFIX,
-                                                    today, timeSuffix)
-        self.assertNotEqual(checkFilename, Covid19Args.downloadFilename())
-        self.assertEqual(checkFilename, Covid19Args.downloadFilename(timeSuffix=timeSuffix))
+        downloadFilenamesWithPath = Covid19Args.downloadFilenamesWithPath(timeSuffix)
+        self.assertEqual(len(InputFileTypes), len(downloadFilenamesWithPath.keys()))
+        for fileType in InputFileTypes:
+            checkFilename = '{0}/{1}_{2}{3}.csv'.format(Covid19Constants.DOWNLOAD_FOLDER,
+                                                        fileType.downloadFilePrefix(),
+                                                        today, timeSuffix)
+            self.assertEqual(checkFilename, downloadFilenamesWithPath[fileType])
 
     def test_setup(self):
         args = Covid19Args()

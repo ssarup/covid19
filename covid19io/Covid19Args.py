@@ -2,6 +2,7 @@ import argparse
 import csv
 from datetime import datetime
 from constants.Covid19Constants import Covid19Constants
+from covid19io.InputFileTypes import InputFileTypes
 
 
 class Covid19Args(object):
@@ -33,14 +34,25 @@ class Covid19Args(object):
         return list(filter(isValid, list(locReader)[0]))
 
     @staticmethod
-    def downloadFilename(timeSuffix=None):
+    def downloadFilenamesWithPath(timeSuffix=None):
+        """
+        Returns separate filenames for the following keys -
+          1. US
+          2. Global
+        :param timeSuffix: Useful for testing. Will use system time if timeSuffix is None.
+        :return: Hash table keyed on InputFileType.
+        """
         today = datetime.today()
         if timeSuffix is None:
             timeSuffix = today.strftime('%H%M')
-        filename = '{0}_{1}{2}.csv'.format(Covid19Constants.CONFIRMED_FILE_PREFIX,
-                                           today.strftime('%Y%m%d'), timeSuffix)
-        fileWithPath = '{0}/{1}'.format(Covid19Constants.DOWNLOAD_FOLDER, filename)
-        return fileWithPath
+
+        fileType2NameWithPath = {}
+        for fileType in InputFileTypes:
+            filename = '{0}_{1}{2}.csv'.format(fileType.downloadFilePrefix(),
+                                               today.strftime('%Y%m%d'), timeSuffix)
+            fileWithPath = '{0}/{1}'.format(Covid19Constants.DOWNLOAD_FOLDER, filename)
+            fileType2NameWithPath[fileType] = fileWithPath
+        return fileType2NameWithPath
 
     @property
     def inputfile(self):
